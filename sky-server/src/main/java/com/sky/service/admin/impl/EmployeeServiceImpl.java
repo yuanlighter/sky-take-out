@@ -1,17 +1,18 @@
 package com.sky.service.admin.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
-import com.sky.exception.AccountLockedException;
-import com.sky.exception.AccountNotFoundException;
-import com.sky.exception.EmployeeNameExistException;
-import com.sky.exception.PasswordErrorException;
+import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.exception.*;
 import com.sky.mapper.admin.EmployeeMapper;
 import com.sky.pojo.Employee;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.admin.EmployeeService;
 import org.springframework.beans.BeanUtils;
@@ -94,6 +95,24 @@ public class EmployeeServiceImpl  implements EmployeeService {
         return Result.success();
     }
 
+    @Override
+    public Result<PageResult> pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        int page = employeePageQueryDTO.getPage();
+        int pageSize = employeePageQueryDTO.getPageSize();
+        if(page <= 0 || pageSize <= 0){
+            throw new ParamsIllegalException("分页参数非法");
+        }
+        PageHelper.startPage(page,pageSize);
+        Page<Employee>employeePage = employeeMapper.selectPageByName(employeePageQueryDTO.getName());
+
+        PageResult pageResult = PageResult
+                .builder()
+                .total(employeePage.getTotal())
+                .records(employeePage.getResult())
+                .build();
+
+        return Result.success(pageResult);
+    }
 
 
 }

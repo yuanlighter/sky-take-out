@@ -1,6 +1,7 @@
 package com.sky.mapper.admin;
 
 
+import com.github.pagehelper.Page;
 import com.sky.pojo.Employee;
 import org.apache.ibatis.annotations.*;
 
@@ -24,4 +25,6 @@ public interface EmployeeMapper {
             "values " +
             "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})")
     void insert(Employee employee);
+
+    Page<Employee> selectPageByName(String name);
 }
