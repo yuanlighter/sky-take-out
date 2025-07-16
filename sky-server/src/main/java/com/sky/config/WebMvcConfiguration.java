@@ -16,8 +16,6 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.List;
-
 /**
  * 配置类，注册web层相关组件
  */
@@ -74,6 +72,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     /**
      * 通过knife4j生成接口文档
      * @return
+     * Docket 是 Swagger 提供的一个核心类，用于构建和定制 API 文档的生成规则和行为。
      */
     @Bean
     public Docket docket() {

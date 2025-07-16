@@ -1,24 +1,22 @@
 package com.sky.service.admin.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
-import com.sky.dto.EmployeePageQueryDTO;
-import com.sky.dto.PasswordEditDTO;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
+import com.sky.exception.EmployeeNameExistException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.admin.EmployeeMapper;
 import com.sky.pojo.Employee;
-import com.sky.result.PageResult;
+import com.sky.result.Result;
 import com.sky.service.admin.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
@@ -36,6 +34,7 @@ public class EmployeeServiceImpl  implements EmployeeService {
      * @param employeeLoginDTO
      * @return
      */
+    @Override
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();//
@@ -62,6 +61,37 @@ public class EmployeeServiceImpl  implements EmployeeService {
         }
         //3、返回实体对象
         return employee;
+    }
+
+    @Override
+    @Transactional
+    public Result<String> add(EmployeeDTO employeeDTO) {
+        // 一.校验参数
+
+        //判断用户名是否存在
+        Employee dbEmployee = employeeMapper.getByUsername(employeeDTO.getUsername());
+        if(dbEmployee!=null){
+            throw new EmployeeNameExistException(dbEmployee.getName()+"已存在");
+        }
+        // 二.处理业务
+        Employee employee = new Employee();
+        //只有数据类型跟属性名都相同的情况下，才能拷贝成功
+        BeanUtils.copyProperties(employeeDTO, employee);
+        // 1.补全实体
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+        employee.setStatus(StatusConstant.ENABLE);
+        LocalDateTime now = LocalDateTime.now();
+        employee.setCreateTime(now);
+        employee.setUpdateTime(now);
+
+        //从ThreadLocal中获取登录的员工ID
+        Long empId = BaseContext.getCurrentId();
+        employee.setCreateUser(empId);
+        employee.setUpdateUser(empId);
+        // 2.保存到数据库
+        employeeMapper.insert(employee);
+        // 三.封装数据
+        return Result.success();
     }
 
 
