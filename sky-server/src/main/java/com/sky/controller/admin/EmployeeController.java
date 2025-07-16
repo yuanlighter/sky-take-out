@@ -91,4 +91,11 @@ public class EmployeeController {
          log.warn("分页条件查询：{}",employeePageQueryDTO);
         return employeeService.pageQuery(employeePageQueryDTO);
     }
+
+    @ApiOperation("启用或禁用")
+    @PostMapping("/status/{status}")
+    public Result<String> startOrStop(@PathVariable(name = "status")Integer status,Long id){
+        log.warn("启用或禁用,status:{},id:{}",status,id);
+        return employeeService.startOrStop(status,id);
+    }
 }

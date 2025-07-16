@@ -22,6 +22,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl  implements EmployeeService {
@@ -112,6 +113,24 @@ public class EmployeeServiceImpl  implements EmployeeService {
                 .build();
 
         return Result.success(pageResult);
+    }
+
+    @Override
+    public Result<String> startOrStop(Integer status, Long id) {
+        if (Objects.isNull(status) || Objects.isNull(id)) {
+            throw new ParamsIllegalException("员工状态与ID均不能为空");
+        }
+            Employee employee = Employee
+                    .builder()
+                    .id(id)
+                    .status(status)
+                    .updateTime(LocalDateTime.now())
+                    .updateUser(BaseContext.getCurrentId())
+                    .build();
+            employeeMapper.updateStatusById(employee);
+
+            return Result.success();
+
     }
 
 
