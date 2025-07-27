@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
-import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -82,14 +80,14 @@ public class EmployeeServiceImpl  implements EmployeeService {
         // 1.补全实体
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         employee.setStatus(StatusConstant.ENABLE);
-        LocalDateTime now = LocalDateTime.now();
+        /*LocalDateTime now = LocalDateTime.now();
         employee.setCreateTime(now);
-        employee.setUpdateTime(now);
+        employee.setUpdateTime(now);*/
 
         //从ThreadLocal中获取登录的员工ID
-        Long empId = BaseContext.getCurrentId();
+      /*  Long empId = BaseContext.getCurrentId();
         employee.setCreateUser(empId);
-        employee.setUpdateUser(empId);
+        employee.setUpdateUser(empId);*/
         // 2.保存到数据库
         employeeMapper.insert(employee);
         // 三.封装数据
@@ -124,8 +122,8 @@ public class EmployeeServiceImpl  implements EmployeeService {
                     .builder()
                     .id(id)
                     .status(status)
-                    .updateTime(LocalDateTime.now())
-                    .updateUser(BaseContext.getCurrentId())
+                   /* .updateTime(LocalDateTime.now())
+                    .updateUser(BaseContext.getCurrentId())*/
                     .build();
             employeeMapper.updateStatusById(employee);
 
