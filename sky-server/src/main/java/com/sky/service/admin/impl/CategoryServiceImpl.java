@@ -9,7 +9,7 @@ import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.admin.CategoryMapper;
-import com.sky.mapper.admin.DishMapper;
+import com.sky.mapper.common.DishMapper;
 import com.sky.mapper.admin.SetmealMapper;
 import com.sky.pojo.Category;
 import com.sky.result.PageResult;
