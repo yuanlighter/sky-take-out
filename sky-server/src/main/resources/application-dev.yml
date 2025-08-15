@@ -7,7 +7,7 @@ sky:
     username: root
     password: 123456
   alioss:
-    endpoint: oss-cn-hangzhou.aliyuncs.com
-    access-key-id: LTAI5tP8mWd9uExKEGRySw1v
-    access-key-secret: UblUpHgR4UypazKmNHW55PULJMzArb
-    bucket-name: yuan-for-javaweb
+    endpoint: 
+    access-key-id: 
+    access-key-secret: 
+    bucket-name: 
